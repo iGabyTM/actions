@@ -1,0 +1,7 @@
+group 'me.gabytm.minecraft.util'
+version '1.0.0'
+
+dependencies {
+    implementation 'org.jetbrains:annotations:21.0.1'
+    api 'org.jetbrains:annotations:21.0.1'
+}

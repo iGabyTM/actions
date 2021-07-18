@@ -1,0 +1,5 @@
+rootProject.name = 'actions'
+
+include 'actions-core'
+include 'actions-spigot'
+

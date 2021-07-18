@@ -1,0 +1,15 @@
+group 'me.gabytm.minecraft.util'
+version '1.0.0'
+
+repositories {
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+}
+
+dependencies {
+    implementation project(':actions-core')
+
+    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    testCompileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+}
