@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 public class ActionParser {
 
+    // https://regex101.com/r/vS44ka/1
     private static final Pattern ACTION_PATTERN = Pattern.compile(
             "(?:\\{(?<properties>.+)}\\s?)?(?:\\[(?<identifier>\\w+)])\\s?(?<data>.*)?"
     );
@@ -21,7 +22,7 @@ public class ActionParser {
     private Map<String, String> parseProperties(final Matcher matcher) {
         final String propertiesGroup = matcher.group("properties");
 
-        if (propertiesGroup == null) {
+        if (propertiesGroup == null || propertiesGroup.isEmpty()) {
             return Collections.emptyMap();
         }
 
@@ -51,12 +52,11 @@ public class ActionParser {
         final Class<?> actionType = actionManager.getType(id);
 
         if (actionType == null) {
-            System.out.println("Not registered");
             return null;
         }
 
         if (!actionType.isAssignableFrom(type)) {
-            System.out.println("Expected " + actionType + " but got " + type);
+            System.out.println("Expected " + actionType + " but got " + type); // TODO: change this to an actual logger
             return null;
         }
 
