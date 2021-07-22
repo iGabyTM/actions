@@ -5,6 +5,11 @@ repositories {
     maven {
         url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
+
+    maven {
+        name 'PlaceholderAPI'
+        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
@@ -12,4 +17,11 @@ dependencies {
 
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
     testCompileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+
+    compileOnly 'me.clip:placeholderapi:2.10.10'
+}
+
+shadowJar {
+    // To use the version that's shaded instead of the one provided by bukkit
+    relocate('com.google.common', 'me.gabytm.util.actions.spigot.libs.guava')
 }

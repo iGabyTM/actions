@@ -1,7 +1,7 @@
 import me.gabytm.util.actions.actions.Action;
 import me.gabytm.util.actions.actions.ActionManager;
 import me.gabytm.util.actions.actions.ActionMeta;
-import me.gabytm.util.actions.spigot.SpigotActionManager;
+import me.gabytm.util.actions.spigot.actions.SpigotActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,7 +37,7 @@ public class Test {
         }
 
         @Override
-        public void run(Player player) {
+        public void run(@NotNull Player player) {
             Bukkit.dispatchCommand(
                     Bukkit.getConsoleSender(),
                     getMeta().getRawData().replace("%player%", player.getName())

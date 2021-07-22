@@ -15,7 +15,7 @@ public abstract class Action<T> {
         return meta;
     }
 
-    public abstract void run(final T t);
+    public abstract void run(@NotNull final T t);
 
     @FunctionalInterface
     public interface Supplier<T> {
