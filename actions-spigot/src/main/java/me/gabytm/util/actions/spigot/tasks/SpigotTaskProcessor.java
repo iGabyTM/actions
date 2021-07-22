@@ -1,4 +1,4 @@
-package me.gabytm.util.actions.spigot;
+package me.gabytm.util.actions.spigot.tasks;
 
 import me.gabytm.util.actions.tasks.TaskProcessor;
 import org.bukkit.Bukkit;
