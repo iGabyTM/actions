@@ -1,21 +1,28 @@
-package me.gabytm.util.actions;
+package me.gabytm.util.actions.actions;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import me.gabytm.util.actions.components.ComponentParser;
+import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import me.gabytm.util.actions.tasks.DefaultTaskProcessor;
 import me.gabytm.util.actions.tasks.TaskProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.SplittableRandom;
 import java.util.stream.Collectors;
 
 public abstract class ActionManager {
 
+    private final PlaceholderManager placeholderManager = new PlaceholderManager();
+    private final ComponentParser componentParser = new ComponentParser(placeholderManager);
     private final ActionParser actionParser = new ActionParser(this);
     private final SplittableRandom random = new SplittableRandom();
 
-    private final Map<String, Class<?>> types = new HashMap<>();
-    private final Map<String, Function<ActionMeta, Action<?>>> actions = new HashMap<>();
+    private final Table<String, Class<?>, Action.Supplier<?>> actions = HashBasedTable.create();
 
     private final TaskProcessor taskProcessor;
     private final double maxChance;
@@ -23,17 +30,6 @@ public abstract class ActionManager {
     public ActionManager(@Nullable TaskProcessor taskProcessor, double maxChance) {
         this.taskProcessor = (taskProcessor == null) ? new DefaultTaskProcessor() : taskProcessor;
         this.maxChance = maxChance + 1D;
-    }
-
-    /**
-     * Get the type of an action by its ID
-     *
-     * @param id the id
-     * @return type if an action with the provided id is registered, otherwise null
-     */
-    @Nullable
-    protected Class<?> getType(@NotNull final String id) {
-        return types.get(id.toLowerCase());
     }
 
     /**
@@ -45,53 +41,69 @@ public abstract class ActionManager {
      * @return action if found, otherwise null
      */
     @Nullable
-    protected <T> Action<T> parseAction(@NotNull final String id, @NotNull final ActionMeta meta) {
-        final Function<ActionMeta, Action<?>> function = actions.get(id.toLowerCase());
+    protected final <T> Action<T> parseAction(@NotNull final Class<T> clazz, @NotNull final String id,
+                                        @NotNull final ActionMeta<T> meta
+    ) {
+        final Action.Supplier<?> supplier = actions.get(id.toLowerCase(), clazz);
 
-        if (function == null) {
+        if (supplier == null) {
             return null;
         }
 
-        return (Action<T>) function.apply(meta);
+        return ((Action.Supplier<T>) supplier).run(meta);
+    }
+
+    @NotNull
+    public PlaceholderManager getPlaceholderManager() {
+        return placeholderManager;
+    }
+
+    @NotNull
+    public ComponentParser getComponentParser() {
+        return componentParser;
+    }
+
+    public <T> boolean isRegistered(@NotNull final Class<T> clazz, @NotNull final String id) {
+        return actions.get(id.toLowerCase(), clazz) != null;
     }
 
     /**
      * Register an action with the given id and type
      *
      * @param id     action id
-     * @param type   action type (class)
+     * @param clazz  action type (class)
      * @param action function to create a new instance
      * @param <T>    action type
      */
-    public <T> void register(@NotNull final String id, @NotNull final Class<T> type,
-                             @NotNull final Function<ActionMeta, Action<?>> action
+    public <T> void register(@NotNull final Class<T> clazz, @NotNull final String id,
+                             @NotNull final Action.Supplier<T> action
     ) {
-        types.put(id.toLowerCase(), type);
-        actions.put(id.toLowerCase(), action);
+        actions.put(id.toLowerCase(), clazz, action);
     }
 
     /**
      * Parse a collection of strings into a {@link List} of {@code Action<T>}
      *
-     * @param tClass  actions type (class)
+     * @param clazz   actions type (class)
      * @param actions list to parse
      * @param <T>     actions type
      * @return {@link List} of {@code Action<T>}
      */
     @NotNull
-    public <T> List<Action<T>> parse(@NotNull final Class<T> tClass, @NotNull final Collection<String> actions) {
+    public <T> List<Action<T>> parse(@NotNull final Class<T> clazz, @NotNull final Collection<String> actions) {
         return actions.stream()
-                .map(it -> actionParser.parse(it, tClass))
+                .map(it -> actionParser.parse(clazz, it))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
     /**
      * Run the given actions with the given argument
-     * @param t argument
+     *
+     * @param t       argument
      * @param actions actions to run
-     * @param async whether the actions should be run async or not
-     * @param <T> actions and argument type
+     * @param async   whether the actions should be run async or not
+     * @param <T>     actions and argument type
      */
     public <T> void run(@NotNull final T t, @NotNull final Collection<Action<T>> actions, final boolean async) {
         for (Action<T> action : actions) {

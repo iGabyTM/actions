@@ -1,6 +1,6 @@
-import me.gabytm.util.actions.Action;
-import me.gabytm.util.actions.ActionManager;
-import me.gabytm.util.actions.ActionMeta;
+import me.gabytm.util.actions.actions.Action;
+import me.gabytm.util.actions.actions.ActionManager;
+import me.gabytm.util.actions.actions.ActionMeta;
 import me.gabytm.util.actions.spigot.SpigotActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,7 +14,7 @@ public class Test {
 
     public static void main(String[] args) {
         final ActionManager actionManager = new SpigotActionManager(JavaPlugin.getProvidingPlugin(TestPlugin.class));
-        actionManager.register("console", Player.class, ConsoleCommandAction::new);
+        actionManager.register(Player.class, "console", ConsoleCommandAction::new);
 
         final List<Action<Player>> actions = actionManager.parse(
                 Player.class,
@@ -40,7 +40,7 @@ public class Test {
         public void run(Player player) {
             Bukkit.dispatchCommand(
                     Bukkit.getConsoleSender(),
-                    getMeta().getData().replace("%player%", player.getName())
+                    getMeta().getRawData().replace("%player%", player.getName())
             );
         }
 

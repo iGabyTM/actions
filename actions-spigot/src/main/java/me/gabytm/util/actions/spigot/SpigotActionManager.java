@@ -1,6 +1,6 @@
 package me.gabytm.util.actions.spigot;
 
-import me.gabytm.util.actions.ActionManager;
+import me.gabytm.util.actions.actions.ActionManager;
 import me.gabytm.util.actions.tasks.TaskProcessor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;

@@ -2,6 +2,14 @@ group 'me.gabytm.minecraft.util'
 version '1.0.0'
 
 dependencies {
-    implementation 'org.jetbrains:annotations:21.0.1'
-    api 'org.jetbrains:annotations:21.0.1'
+    [
+            'org.jetbrains:annotations:21.0.1',
+            'com.udojava:EvalEx:2.6',
+            'com.google.guava:guava:30.1.1-jre'
+    ].each {
+        implementation(it)
+        api(it)
+    }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
 }
