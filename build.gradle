@@ -11,12 +11,13 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:6.0.0'
+        classpath 'gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0'
     }
 }
 
 subprojects {
     apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
     apply plugin: 'com.github.johnrengelman.shadow'
 
     version = this.version
@@ -26,4 +27,50 @@ subprojects {
     repositories {
         mavenCentral()
     }
+
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set('sources')
+        from sourceSets.main.allJava
+    }
+
+    task javadocJar(type: Jar, dependsOn: Javadoc) {
+        archiveClassifier.set('javadoc')
+    }
+
+    javadoc {
+        if (options instanceof StandardJavadocDocletOptions) {
+            def opt = options as StandardJavadocDocletOptions
+
+            opt.links(
+                    'https://docs.oracle.com/javase/8/docs/api/'
+            )
+
+            if (JavaVersion.current().java9Compatible) {
+                opt.addBooleanOption('html5', true)
+                opt.addStringOption('-release', '9')
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    url = 'https://github.com/iGabyTM/actions'
+
+                    scm {
+                        connection = 'scm:git:git://github.com/iGabyTM/actions.git'
+                        developerConnection = 'scm:git:ssh://github.com/iGabyTM/actions.git'
+                        url = 'https://github.com/iGabyTM/actions'
+                    }
+                }
+            }
+        }
+    }
+
 }
