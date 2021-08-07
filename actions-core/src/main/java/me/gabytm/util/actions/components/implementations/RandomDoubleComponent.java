@@ -1,5 +1,6 @@
 package me.gabytm.util.actions.components.implementations;
 
+import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.components.Component;
 import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import me.gabytm.util.actions.utils.Numbers;
@@ -41,7 +42,7 @@ public class RandomDoubleComponent<T> extends Component<T, Double> {
     }
 
     @Override
-    public @NotNull Double parse(T t) {
+    public @NotNull Double parse(@NotNull final T t, @NotNull final Context<T> context) {
         double result;
 
         // The values didn't contain placeholders or anything
@@ -49,8 +50,8 @@ public class RandomDoubleComponent<T> extends Component<T, Double> {
             result = (minDouble.equals(maxDouble)) ? minDouble : RANDOM.nextDouble(minDouble, maxDouble + 1D);
         } else {
             // Replace the placeholders and attempt to parse the strings again
-            final double min = Numbers.tryParse(placeholderManager.replace(t, minString), 0D);
-            final double max = Numbers.tryParse(placeholderManager.replace(t, maxString), 0D);
+            final double min = Numbers.tryParse(placeholderManager.replace(t, minString, context), 0D);
+            final double max = Numbers.tryParse(placeholderManager.replace(t, maxString, context), 0D);
 
             result = (min == max) ? min : RANDOM.nextDouble(min, max + 1D);
         }

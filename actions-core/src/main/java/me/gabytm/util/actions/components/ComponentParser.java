@@ -2,6 +2,7 @@ package me.gabytm.util.actions.components;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.components.implementations.MathComponent;
 import me.gabytm.util.actions.components.implementations.RandomDoubleComponent;
 import me.gabytm.util.actions.components.implementations.RandomLongComponent;
@@ -29,8 +30,8 @@ public class ComponentParser {
     }
 
     @Nullable
-    private <T> Component<T, ?> parseComponent(@NotNull final Class<T> clazz, @NotNull final String id,
-                                               @NotNull final String value
+    private <T> Component<T, ?> createComponent(@NotNull final Class<T> clazz, @NotNull final String id,
+                                                @NotNull final String value
     ) {
         final Component.Supplier<?, ?> supplier = registeredComponents.get(id.toLowerCase(), clazz);
 
@@ -54,8 +55,8 @@ public class ComponentParser {
     }
 
     @NotNull
-    public <T> List<Component<T, ?>> parse(@NotNull final Class<T> clazz, @NotNull final String string) {
-        final Matcher matcher = COMPONENT_PATTERN.matcher(string);
+    public <T> List<Component<T, ?>> parseComponents(@NotNull final Class<T> clazz, @NotNull final String data) {
+        final Matcher matcher = COMPONENT_PATTERN.matcher(data);
         final List<Component<T, ?>> foundComponents = new ArrayList<>();
 
         int lastMatchEnd = 0;
@@ -64,18 +65,18 @@ public class ComponentParser {
             final int matchStart = matcher.start();
             final String id = matcher.group("id").toLowerCase();
 
-            final Component<T, ?> node = parseComponent(clazz, id, matcher.group("data"));
+            final Component<T, ?> node = createComponent(clazz, id, matcher.group("data"));
 
             // A node syntax was found but a node with the provided class and id is not registered
             if (node == null) {
-                foundComponents.add(new StringComponent<>(string.substring(lastMatchEnd, matcher.end()), placeholderManager));
+                foundComponents.add(new StringComponent<>(data.substring(lastMatchEnd, matcher.end()), placeholderManager));
                 lastMatchEnd = matcher.end();
                 continue;
             }
 
             // The match is not at the start of the string so the string that's before is be parsed as well
             if (matchStart != 0 && matchStart != lastMatchEnd) {
-                foundComponents.add(new StringComponent<>(string.substring(lastMatchEnd, matchStart), placeholderManager));
+                foundComponents.add(new StringComponent<>(data.substring(lastMatchEnd, matchStart), placeholderManager));
             }
 
             foundComponents.add(node);
@@ -83,8 +84,8 @@ public class ComponentParser {
         }
 
         // Adding the leftovers as StringNode
-        if (lastMatchEnd != string.length()) {
-            foundComponents.add(new StringComponent<>(string.substring(lastMatchEnd), placeholderManager));
+        if (lastMatchEnd != data.length()) {
+            foundComponents.add(new StringComponent<>(data.substring(lastMatchEnd), placeholderManager));
         }
 
         return foundComponents;

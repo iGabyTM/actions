@@ -1,5 +1,6 @@
 package me.gabytm.util.actions.components;
 
+import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ public abstract class Component<T, R> {
     }
 
     @NotNull
-    public abstract R parse(T t);
+    public abstract R parse(@NotNull final T t, @NotNull final Context<T> context);
 
     @FunctionalInterface
     public interface Supplier<T, R> {

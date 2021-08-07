@@ -40,11 +40,11 @@ public class ActionMeta<T> {
     }
 
     @NotNull
-    public String getParsedData(@NotNull final T t) {
+    public String getParsedData(@NotNull final T t, @NotNull final Context<T> context) {
         final StringBuilder stringBuilder = new StringBuilder(rawData.length());
 
         for (Component<T, ?> component : components) {
-            stringBuilder.append(component.parse(t));
+            stringBuilder.append(component.parse(t, context));
         }
 
         return stringBuilder.toString();
