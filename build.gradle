@@ -1,5 +1,5 @@
 group 'me.gabytm.minecraft.util'
-version '1.0.0'
+version '1.0.0-SNAPSHOT'
 
 buildscript {
     repositories {
@@ -33,7 +33,7 @@ subprojects {
         from sourceSets.main.allJava
     }
 
-    task javadocJar(type: Jar, dependsOn: Javadoc) {
+    task javadocJar(type: Jar, dependsOn: javadoc) {
         archiveClassifier.set('javadoc')
         from javadoc
     }
@@ -73,6 +73,10 @@ subprojects {
                     }
                 }
             }
+        }
+
+        repositories {
+            mavenLocal()
         }
     }
 
