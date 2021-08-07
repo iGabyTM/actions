@@ -2,7 +2,6 @@ package me.gabytm.util.actions.components;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.components.implementations.MathComponent;
 import me.gabytm.util.actions.components.implementations.RandomDoubleComponent;
 import me.gabytm.util.actions.components.implementations.RandomLongComponent;
