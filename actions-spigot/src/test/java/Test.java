@@ -1,6 +1,7 @@
 import me.gabytm.util.actions.actions.Action;
 import me.gabytm.util.actions.actions.ActionManager;
 import me.gabytm.util.actions.actions.ActionMeta;
+import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.spigot.actions.SpigotActionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -32,12 +33,12 @@ public class Test {
 
     private static class ConsoleCommandAction extends Action<Player> {
 
-        public ConsoleCommandAction(@NotNull ActionMeta meta) {
+        public ConsoleCommandAction(@NotNull ActionMeta<Player> meta) {
             super(meta);
         }
 
         @Override
-        public void run(@NotNull Player player) {
+        public void run(@NotNull final Player player, @NotNull final Context<Player> context) {
             Bukkit.dispatchCommand(
                     Bukkit.getConsoleSender(),
                     getMeta().getRawData().replace("%player%", player.getName())

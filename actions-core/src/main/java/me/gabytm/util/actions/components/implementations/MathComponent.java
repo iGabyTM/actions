@@ -2,6 +2,7 @@ package me.gabytm.util.actions.components.implementations;
 
 import com.google.common.primitives.Ints;
 import com.udojava.evalex.Expression;
+import me.gabytm.util.actions.actions.Context;
 import me.gabytm.util.actions.components.Component;
 import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
@@ -37,8 +38,8 @@ public class MathComponent<T> extends Component<T, BigDecimal> {
     }
 
     @Override
-    public @NotNull BigDecimal parse(T t) {
-        final BigDecimal result = new Expression(placeholderManager.replace(t, stringValue)).eval(false);
+    public @NotNull BigDecimal parse(@NotNull final T t, @NotNull Context<T> context) {
+        final BigDecimal result = new Expression(placeholderManager.replace(t, stringValue, context)).eval(false);
         return (scale < 0) ? result : result.setScale(scale, RoundingMode.HALF_UP);
     }
 

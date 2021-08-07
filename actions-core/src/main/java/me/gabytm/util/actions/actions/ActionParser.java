@@ -48,7 +48,7 @@ public class ActionParser {
     }
 
     @Nullable
-    public <T> Action<T> parse(@NotNull final Class<T> clazz, @NotNull final String input) {
+    public <T> Action<T> parseAction(@NotNull final Class<T> clazz, @NotNull final String input) {
         final Matcher matcher = ACTION_PATTERN.matcher(input);
 
         if (!matcher.find()) {
@@ -62,9 +62,9 @@ public class ActionParser {
         }
 
         final String data = matcher.group("data");
-        final List<Component<T, ?>> nodes = (data == null) ? Collections.emptyList() : actionManager.getComponentParser().parse(clazz, data);
+        final List<Component<T, ?>> nodes = (data == null) ? Collections.emptyList() : actionManager.getComponentParser().parseComponents(clazz, data);
         final ActionMeta<T> meta = new ActionMeta<>(parseProperties(matcher), data, nodes);
-        return actionManager.parseAction(clazz, id, meta);
+        return actionManager.createAction(clazz, id, meta);
     }
 
 }

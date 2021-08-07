@@ -1,8 +1,8 @@
 package me.gabytm.util.actions.spigot.actions;
 
 import me.gabytm.util.actions.actions.ActionManager;
-import me.gabytm.util.actions.spigot.tasks.SpigotTaskProcessor;
 import me.gabytm.util.actions.spigot.placeholders.PlaceholderAPIProvider;
+import me.gabytm.util.actions.spigot.tasks.SpigotTaskProcessor;
 import me.gabytm.util.actions.tasks.TaskProcessor;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

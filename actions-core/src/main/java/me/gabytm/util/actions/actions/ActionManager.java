@@ -2,6 +2,7 @@ package me.gabytm.util.actions.actions;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import me.gabytm.util.actions.actions.implementations.DataAction;
 import me.gabytm.util.actions.components.ComponentParser;
 import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import me.gabytm.util.actions.tasks.DefaultTaskProcessor;
@@ -9,10 +10,7 @@ import me.gabytm.util.actions.tasks.TaskProcessor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.SplittableRandom;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class ActionManager {
@@ -41,8 +39,8 @@ public abstract class ActionManager {
      * @return action if found, otherwise null
      */
     @Nullable
-    protected final <T> Action<T> parseAction(@NotNull final Class<T> clazz, @NotNull final String id,
-                                        @NotNull final ActionMeta<T> meta
+    protected final <T> Action<T> createAction(@NotNull final Class<T> clazz, @NotNull final String id,
+                                               @NotNull final ActionMeta<T> meta
     ) {
         final Action.Supplier<?> supplier = actions.get(id.toLowerCase(), clazz);
 
@@ -81,6 +79,10 @@ public abstract class ActionManager {
         actions.put(id.toLowerCase(), clazz, action);
     }
 
+    public <T> void registerDefaults(@NotNull final Class<T> clazz) {
+        register(clazz, DataAction.ID, DataAction::new);
+    }
+
     /**
      * Parse a collection of strings into a {@link List} of {@code Action<T>}
      *
@@ -92,7 +94,7 @@ public abstract class ActionManager {
     @NotNull
     public <T> List<Action<T>> parse(@NotNull final Class<T> clazz, @NotNull final Collection<String> actions) {
         return actions.stream()
-                .map(it -> actionParser.parse(clazz, it))
+                .map(it -> actionParser.parseAction(clazz, it))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -103,10 +105,15 @@ public abstract class ActionManager {
      * @param t       argument
      * @param actions actions to run
      * @param async   whether the actions should be run async or not
+     * @param data    the default data (see {@link Context#getData(String)})
      * @param <T>     actions and argument type
      */
-    public <T> void run(@NotNull final T t, @NotNull final Collection<Action<T>> actions, final boolean async) {
-        for (Action<T> action : actions) {
+    public <T> void run(@NotNull final T t, @NotNull final List<Action<T>> actions,
+                        final boolean async, @NotNull final Map<String, Object> data
+    ) {
+        final Context<T> context = new Context<>(actions, data);
+
+        for (Action<T> action : context) {
             if (action.getMeta().hasChance()) {
                 if (random.nextDouble(0D, maxChance) > action.getMeta().getChance()) {
                     continue;
@@ -115,20 +122,33 @@ public abstract class ActionManager {
 
             if (action.getMeta().hasDelay()) {
                 if (async) {
-                    taskProcessor.runAsync(() -> action.run(t), action.getMeta().getDelay());
+                    taskProcessor.runAsync(() -> action.run(t, context), action.getMeta().getDelay());
                 } else {
-                    taskProcessor.runSync(() -> action.run(t), action.getMeta().getDelay());
+                    taskProcessor.runSync(() -> action.run(t, context), action.getMeta().getDelay());
                 }
 
                 continue;
             }
 
             if (async) {
-                taskProcessor.runAsync(() -> action.run(t));
+                taskProcessor.runAsync(() -> action.run(t, context));
             } else {
-                taskProcessor.runSync(() -> action.run(t));
+                taskProcessor.runSync(() -> action.run(t, context));
             }
         }
+    }
+
+    /**
+     * The equivalent of {@link #run(Object, List, boolean, Map)} called with {@link Collections#emptyMap()}
+     * for {@code data}
+     *
+     * @param t       argument
+     * @param actions actions to run
+     * @param async   whether the actions should be run async or not
+     * @param <T>     actions and argument type
+     */
+    public <T> void run(@NotNull final T t, @NotNull final List<Action<T>> actions, final boolean async) {
+        run(t, actions, async, Collections.emptyMap());
     }
 
 }

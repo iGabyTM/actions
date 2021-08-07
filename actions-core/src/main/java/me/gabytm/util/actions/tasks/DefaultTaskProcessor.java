@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
 
 public class DefaultTaskProcessor implements TaskProcessor {
 
-    private final ExecutorService asyncService = Executors.newSingleThreadExecutor();
-    private final ScheduledExecutorService asyncDelayedService = Executors.newSingleThreadScheduledExecutor();
+    private final ExecutorService asyncService = Executors.newCachedThreadPool();
+    private final ScheduledExecutorService asyncDelayedService = Executors.newScheduledThreadPool(10);
 
     private final Timer syncTimer = new Timer();
 

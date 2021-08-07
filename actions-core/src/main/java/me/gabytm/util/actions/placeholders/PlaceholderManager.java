@@ -1,5 +1,6 @@
 package me.gabytm.util.actions.placeholders;
 
+import me.gabytm.util.actions.actions.Context;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -11,6 +12,11 @@ public class PlaceholderManager {
 
     public void register(@NotNull final PlaceholderProvider<?> provider) {
         providers.add(provider);
+    }
+
+    @NotNull
+    public <T> String replace(@NotNull final T t, @NotNull final String string, @NotNull final Context<T> context) {
+        return replace(t, context.replaceData(string));
     }
 
     @NotNull
