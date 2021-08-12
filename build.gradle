@@ -1,4 +1,4 @@
-group 'me.gabytm.minecraft.util'
+group 'me.gabytm.util'
 version '1.0.0-SNAPSHOT'
 
 buildscript {
@@ -39,18 +39,22 @@ subprojects {
     }
 
     javadoc {
+        destinationDir = file('../docs/' + project.version + '/' + project.name.replace('actions-', ''))
+
         options.encoding = 'UTF-8'
 
         if (options instanceof StandardJavadocDocletOptions) {
             def opt = options as StandardJavadocDocletOptions
 
-            opt.links(
-                    'https://docs.oracle.com/javase/8/docs/api/'
-            )
+            opt.links('https://docs.oracle.com/javase/8/docs/api/')
 
             if (JavaVersion.current().isJava9Compatible()) {
                 opt.addBooleanOption('html5', true)
                 opt.addStringOption('-release', '9')
+            }
+
+            if (project.name != 'actions-core') {
+                //opt.links('https://gabytm.me/docs/actions/' + project.version + '/core/')
             }
         }
     }

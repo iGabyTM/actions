@@ -1,4 +1,4 @@
-group 'me.gabytm.minecraft.util'
+group 'me.gabytm.util'
 
 dependencies {
     api 'org.jetbrains:annotations:21.0.1'
@@ -6,4 +6,8 @@ dependencies {
     api 'com.google.guava:guava:30.1.1-jre'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+}
+
+javadoc {
+    (options as StandardJavadocDocletOptions).links('https://javadoc.io/doc/org.jetbrains/annotations/20.1.0/')
 }

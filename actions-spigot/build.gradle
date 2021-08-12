@@ -1,4 +1,4 @@
-group 'me.gabytm.minecraft.util'
+group 'me.gabytm.util'
 
 repositories {
     maven {
@@ -21,9 +21,7 @@ dependencies {
 }
 
 javadoc {
-    def opt = options as StandardJavadocDocletOptions
-
-    opt.links('https://papermc.io/javadocs/paper/1.16/')
+    (options as StandardJavadocDocletOptions).links('https://papermc.io/javadocs/paper/1.16/')
 }
 
 shadowJar {
