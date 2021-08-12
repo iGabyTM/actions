@@ -35,6 +35,10 @@ public class ActionMeta<T> {
         return properties;
     }
 
+    public List<Component<T, ?>> getComponents() {
+        return components;
+    }
+
     public String getRawData() {
         return rawData;
     }
