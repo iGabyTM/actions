@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 
 public abstract class ActionManager {
 
-    private final PlaceholderManager placeholderManager = new PlaceholderManager();
-    private final ComponentParser componentParser = new ComponentParser(placeholderManager);
-    private final ActionParser actionParser = new ActionParser(this);
-    private final SplittableRandom random = new SplittableRandom();
+    protected final PlaceholderManager placeholderManager = new PlaceholderManager();
+    protected final ComponentParser componentParser = new ComponentParser(placeholderManager);
+    protected final ActionParser actionParser = new ActionParser(this);
+    protected final SplittableRandom random = new SplittableRandom();
 
-    private final Table<String, Class<?>, Action.Supplier<?>> actions = HashBasedTable.create();
+    protected final Table<String, Class<?>, Action.Supplier<?>> actions = HashBasedTable.create();
 
-    private final TaskProcessor taskProcessor;
-    private final double maxChance;
+    protected final TaskProcessor taskProcessor;
+    protected final double maxChance;
 
     public ActionManager(@Nullable TaskProcessor taskProcessor, double maxChance) {
         this.taskProcessor = (taskProcessor == null) ? new DefaultTaskProcessor() : taskProcessor;
@@ -33,9 +33,10 @@ public abstract class ActionManager {
     /**
      * Parse an action with the provided id and {@link ActionMeta}
      *
-     * @param id   action id
-     * @param meta action meta
-     * @param <T>  action type
+     * @param clazz action type (class)
+     * @param id    action id
+     * @param meta  action meta
+     * @param <T>   action type
      * @return action if found, otherwise null
      */
     @Nullable
@@ -114,26 +115,28 @@ public abstract class ActionManager {
         final Context<T> context = new Context<>(actions, data);
 
         for (Action<T> action : context) {
-            if (action.getMeta().hasChance()) {
-                if (random.nextDouble(0D, maxChance) > action.getMeta().getChance()) {
-                    continue;
-                }
+            final ActionMeta<T> meta = action.getMeta();
+
+            if (meta.hasChance() && random.nextDouble(0D, maxChance) > meta.getChance()) {
+                continue;
             }
 
-            if (action.getMeta().hasDelay()) {
+            final Runnable task = () -> action.run(t, context);
+
+            if (meta.hasDelay()) {
                 if (async) {
-                    taskProcessor.runAsync(() -> action.run(t, context), action.getMeta().getDelay());
+                    taskProcessor.runAsync(task, meta.getDelay());
                 } else {
-                    taskProcessor.runSync(() -> action.run(t, context), action.getMeta().getDelay());
+                    taskProcessor.runSync(task, meta.getDelay());
                 }
 
                 continue;
             }
 
             if (async) {
-                taskProcessor.runAsync(() -> action.run(t, context));
+                taskProcessor.runAsync(task);
             } else {
-                taskProcessor.runSync(() -> action.run(t, context));
+                taskProcessor.runSync(task);
             }
         }
     }
