@@ -1,24 +1,25 @@
 package me.gabytm.util.actions.actions;
 
+import me.gabytm.util.actions.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Context<T> implements Iterable<Action<T>> {
-
-    private static final Pattern DATA_PATTERN = Pattern.compile("\\$\\[(?<key>[^]]+)]");
 
     private final Map<String, Object> data;
     private final List<Action<T>> actions;
 
+    private final Map<String, String> stringData = new HashMap<>();
+
     public Context(List<Action<T>> actions, Map<String, Object> data) {
         this.actions = actions;
         this.data = data;
+        data.forEach((key, value) -> stringData.put(key, String.valueOf(value)));
     }
 
     @NotNull
@@ -29,6 +30,7 @@ public class Context<T> implements Iterable<Action<T>> {
 
     public void storeData(@NotNull final String key, @NotNull final Object value) {
         data.put(key, value);
+        stringData.put(key, String.valueOf(data));
     }
 
     @Nullable
@@ -38,17 +40,11 @@ public class Context<T> implements Iterable<Action<T>> {
 
     @NotNull
     public String replaceData(@NotNull String input) {
-        if (data.isEmpty()) {
+        if (data.isEmpty() || input.trim().isEmpty()) {
             return input;
         }
 
-        final Matcher matcher = DATA_PATTERN.matcher(input);
-
-        while (matcher.find()) {
-            input = input.replace(matcher.group(), String.valueOf(getData(matcher.group("key"))));
-        }
-
-        return input;
+        return Strings.replaceEach(input, stringData.keySet().toArray(new String[0]), stringData.values().toArray(new String[0]));
     }
 
 }
