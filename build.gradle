@@ -46,7 +46,10 @@ subprojects {
         if (options instanceof StandardJavadocDocletOptions) {
             def opt = options as StandardJavadocDocletOptions
 
-            opt.links('https://docs.oracle.com/javase/8/docs/api/')
+            opt.links(
+                    'https://docs.oracle.com/javase/8/docs/api/',
+                    'https://javadoc.io/doc/org.jetbrains/annotations/20.1.0/'
+            )
 
             if (JavaVersion.current().isJava9Compatible()) {
                 opt.addBooleanOption('html5', true)
