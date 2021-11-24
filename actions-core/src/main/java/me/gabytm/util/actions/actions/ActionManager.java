@@ -151,7 +151,7 @@ public abstract class ActionManager {
      * @param <T>     actions and argument type
      */
     public <T> void run(@NotNull final T t, @NotNull final List<Action<T>> actions, final boolean async) {
-        run(t, actions, async, Collections.emptyMap());
+        run(t, actions, async, new HashMap<>());
     }
 
 }

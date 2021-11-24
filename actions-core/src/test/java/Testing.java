@@ -20,8 +20,8 @@ public class Testing {
         actionManager.getComponentParser().registerDefaults(Person.class);
 
         final List<Action<Person>> actions = actionManager.parse(Person.class, Arrays.asList(
-                "[data] test this is the value for 'test'",
-                "[example] Hei %person_name% o/ math:{%person_age%/2} $[unknown]",
+                "[data] $[test] this is the value for 'test'",
+                "[example] Hei %person_name% o/ math:{%person_age%/2} $[unknown] $[test]",
                 "[example] Random long: randomL:{%person_age%,200} | Random double: random:{3,100.25,200.35}"
         ));
 

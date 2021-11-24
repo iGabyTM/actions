@@ -4,10 +4,7 @@ import me.gabytm.util.actions.utils.Strings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Context<T> implements Iterable<Action<T>> {
 
@@ -30,7 +27,7 @@ public class Context<T> implements Iterable<Action<T>> {
 
     public void storeData(@NotNull final String key, @NotNull final Object value) {
         data.put(key, value);
-        stringData.put(key, String.valueOf(data));
+        stringData.put(key, String.valueOf(value));
     }
 
     @Nullable
