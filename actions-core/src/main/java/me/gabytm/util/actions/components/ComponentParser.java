@@ -2,10 +2,7 @@ package me.gabytm.util.actions.components;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import me.gabytm.util.actions.components.implementations.MathComponent;
-import me.gabytm.util.actions.components.implementations.RandomDoubleComponent;
-import me.gabytm.util.actions.components.implementations.RandomLongComponent;
-import me.gabytm.util.actions.components.implementations.StringComponent;
+import me.gabytm.util.actions.components.implementations.*;
 import me.gabytm.util.actions.placeholders.PlaceholderManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +48,7 @@ public class ComponentParser {
         register(clazz, MathComponent.ID, MathComponent::new);
         register(clazz, RandomDoubleComponent.ID, RandomDoubleComponent::new);
         register(clazz, RandomLongComponent.ID, RandomLongComponent::new);
+        register(clazz, RandomElementComponent.ID, RandomElementComponent::new);
     }
 
     @NotNull
