@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ActionMeta<T> {
 
@@ -33,6 +34,17 @@ public class ActionMeta<T> {
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    public <R> R getProperty(@NotNull final String key, @NotNull final R def, @NotNull final Function<@NotNull String, @Nullable R> transformer) {
+        final String value = this.properties.get(key);
+
+        if (value == null) {
+            return def;
+        }
+
+        final R result = transformer.apply(value);
+        return (result == null) ? def : result;
     }
 
     public List<Component<T, ?>> getComponents() {
