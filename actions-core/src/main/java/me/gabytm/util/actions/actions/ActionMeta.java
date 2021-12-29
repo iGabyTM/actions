@@ -36,6 +36,7 @@ public class ActionMeta<T> {
         return properties;
     }
 
+    @NotNull
     public <R> R getProperty(@NotNull final String key, @NotNull final R def, @NotNull final Function<@NotNull String, @Nullable R> transformer) {
         final String value = this.properties.get(key);
 
