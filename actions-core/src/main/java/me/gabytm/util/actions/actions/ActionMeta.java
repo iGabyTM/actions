@@ -1,7 +1,8 @@
 package me.gabytm.util.actions.actions;
 
+import com.google.common.primitives.Doubles;
+import com.google.common.primitives.Longs;
 import me.gabytm.util.actions.components.Component;
-import me.gabytm.util.actions.utils.Numbers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,8 +29,8 @@ public class ActionMeta<T> {
         this.rawData = rawData == null ? "" : rawData;
         this.components = components;
 
-        this.delay = Numbers.tryParse(properties.get("delay"), DEFAULT_DELAY);
-        this.chance = Numbers.tryParse(properties.get("chance"), DEFAULT_CHANCE);
+        this.delay = getProperty("delay", DEFAULT_DELAY, Longs::tryParse);
+        this.chance = getProperty("chance", DEFAULT_CHANCE, Doubles::tryParse);
     }
 
     public Map<String, String> getProperties() {
