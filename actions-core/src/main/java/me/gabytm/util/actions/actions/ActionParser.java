@@ -13,9 +13,9 @@ import java.util.regex.Pattern;
 
 public class ActionParser {
 
-    // https://regex101.com/r/vS44ka/1
+    // https://regex101.com/r/KJQQxW/1
     private static final Pattern ACTION_PATTERN = Pattern.compile(
-            "(?:\\{(?<properties>.+)}\\s?)?(?:\\[(?<id>\\w+)])\\s?(?<data>.*)?"
+            "(?:\\{(?<properties>.+)}[^\\[]*)?(?:\\[(?<id>\\w+)])\\s?(?<data>.*)?"
     );
 
     private final ActionManager actionManager;
