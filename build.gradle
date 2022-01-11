@@ -93,7 +93,13 @@ subprojects {
         }
 
         repositories {
-            mavenLocal()
+            maven {
+                url 'https://repo.mattstudios.me/artifactory/public/'
+                credentials {
+                    username System.getProperty('MATT_REPO_USERNAME') ?: System.getenv('MATT_REPO_USERNAME')
+                    password System.getProperty('MATT_REPO_PASSWORD') ?: System.getenv('MATT_REPO_PASSWORD')
+                }
+            }
         }
     }
 
