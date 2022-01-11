@@ -73,6 +73,16 @@ subprojects {
                 pom {
                     url = 'https://github.com/iGabyTM/actions'
 
+                    developers {
+                        developer {
+                            id = 'GabyTM'
+                            name = 'Gabriel Dumitru'
+                            email = 'contactgabytm@gmail.com'
+                            url = 'https://github.com/iGabyTM'
+                            timezone = 'Europe/Buchares'
+                        }
+                    }
+
                     scm {
                         connection = 'scm:git:git://github.com/iGabyTM/actions.git'
                         developerConnection = 'scm:git:ssh://github.com/iGabyTM/actions.git'
