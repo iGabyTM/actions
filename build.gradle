@@ -48,7 +48,7 @@ subprojects {
 
             opt.links(
                     'https://docs.oracle.com/javase/8/docs/api/',
-                    'https://javadoc.io/doc/org.jetbrains/annotations/20.1.0/'
+                    'https://javadoc.io/doc/org.jetbrains/annotations/23.0.0/'
             )
 
             if (JavaVersion.current().isJava9Compatible()) {
