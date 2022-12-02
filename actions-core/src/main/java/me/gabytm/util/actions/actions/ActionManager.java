@@ -112,6 +112,7 @@ public abstract class ActionManager {
     public <T> void run(@NotNull final T t, @NotNull final List<Action<T>> actions,
                         final boolean async, @NotNull final Map<String, Object> data
     ) {
+        final boolean shouldRunAsync = async && actions.stream().allMatch(Action::canRunAsync);
         final Context<T> context = new Context<>(actions, data);
 
         for (Action<T> action : context) {

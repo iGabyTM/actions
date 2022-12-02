@@ -4,14 +4,16 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class Action<T> {
 
-    private final ActionMeta<T> meta;
+    protected final ActionMeta<T> meta;
 
     public Action(@NotNull ActionMeta<T> meta) {
         this.meta = meta;
     }
 
+    protected abstract boolean canRunAsync();
+
     @NotNull
-    public final ActionMeta<T> getMeta() {
+    protected final ActionMeta<T> getMeta() {
         return meta;
     }
 

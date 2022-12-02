@@ -14,8 +14,13 @@ public class DataAction<T> extends Action<T> {
     }
 
     @Override
+    protected boolean canRunAsync() {
+        return true;
+    }
+
+    @Override
     public void run(@NotNull T t, @NotNull Context<T> context) {
-        final String[] parts = getMeta().getParsedData(t, context).split(" ", 2);
+        final String[] parts = meta.getParsedData(t, context).split(" ", 2);
 
         if (parts.length != 2) {
             return;

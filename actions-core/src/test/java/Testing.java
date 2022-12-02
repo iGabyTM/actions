@@ -74,7 +74,7 @@ public class Testing {
 
         @Override
         public void run(@NotNull Person person, @NotNull final Context<Person> context) {
-            System.out.println(getMeta().getParsedData(person, context));
+            System.out.println(meta.getParsedData(person, context));
         }
 
     }
